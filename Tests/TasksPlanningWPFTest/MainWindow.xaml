@@ -6,11 +6,43 @@
         xmlns:local="clr-namespace:TasksPlanningWPFTest"
         mc:Ignorable="d"
         
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="26,18,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="135" Height="49"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="186,18,0,0" VerticalAlignment="Top" Width="77" Click="Button_Click"/>
-        <Label x:Name="label1" Content="Label" HorizontalAlignment="Left" Margin="165,100,0,0" VerticalAlignment="Top"/>
+        Title="MainWindow" Height="600" Width="800">
+    <Grid ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="ListView" Grid.ColumnSpan="2" Grid.RowSpan="3" SelectionChanged="ListView_OnSelected" Background="Cornsilk" />
+        <StackPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Background="Bisque">
+            <Label x:Name="Label1" Content="Label"  MinWidth="200"/>
+            <TextBox x:Name="InputTextBox" TextWrapping="Wrap"/>
+            <Separator Opacity="0" Height="10"></Separator>
+            <Button Content="Button" Width="77" Click="Button_Click"/>    
+        </StackPanel>
+        
+        <StackPanel Background="Bisque" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Top" Margin="25">
+            <Label x:Name="TaskInfo" Content="Task Info"  MinWidth="200"/>
+            <Label x:Name="TaskId" Content="Task Id:X"  MinWidth="200"/>
+            
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Dependecy Id:"/>
+                <TextBox x:Name="AddDepIdTxtBox" Width="50"></TextBox>
+            </StackPanel>
+            <Button x:Name="AddDepBtn" Content="Add Dependency" Click="AddDepBtn_OnClick"/>    
+
+            <Label Content="Dependecies"  MinWidth="200"/>
+            <ScrollViewer VerticalAlignment="Stretch" Height="180" Padding="10">
+                <ListView x:Name="TaskDependecies">
+                    
+                </ListView>
+            </ScrollViewer>
+        </StackPanel>
     </Grid>
 
 </Window>

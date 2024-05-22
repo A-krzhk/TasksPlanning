@@ -52,6 +52,11 @@ namespace TasksPlanningWPFTest
             return res;
         }
 
+        public override string ToString()
+        {
+            return $"Task №{Id}, Self {SelfCost} Total {TotalCost}";
+        }
+
         public static void SortDemucron(TaskTracker taskTracker)
         {
             var first = true;
