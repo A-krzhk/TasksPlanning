@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TasksPlanningWPFTest"
         mc:Ignorable="d"
+        
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="26,18,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="135" Height="49"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="186,18,0,0" VerticalAlignment="Top" Width="77" Click="Button_Click"/>
+        <Label x:Name="label1" Content="Label" HorizontalAlignment="Left" Margin="165,100,0,0" VerticalAlignment="Top"/>
     </Grid>
+
 </Window>

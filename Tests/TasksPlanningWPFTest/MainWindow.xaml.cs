@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,14 +12,22 @@ using System.Windows.Shapes;
 
 namespace TasksPlanningWPFTest
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    
     public partial class MainWindow : Window
     {
+        TaskTracker taskTracker = new TaskTracker();
+
         public MainWindow()
         {
+            
+
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            taskTracker.AddTask(new Task(Int32.Parse(textBox1.Text)));
+            label1.Content = taskTracker.PrintFirst();
         }
     }
 }
