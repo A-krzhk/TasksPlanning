@@ -5,17 +5,18 @@ namespace TasksPlanning.ViewModels.Base
 {
     internal abstract class ViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        protected virtual bool Set<T> (ref T field, T value, [CallerMemberName] string propertyName = null)
+        protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string PropertyName = null)
         {
             if (Equals(field, value)) return false;
-            OnPropertyChanged(propertyName);
+            field = value;
+            OnPropertyChanged(PropertyName);
             return true;
         }
     }
