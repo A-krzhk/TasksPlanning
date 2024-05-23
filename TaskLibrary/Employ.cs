@@ -1,13 +1,12 @@
-﻿using System.Globalization;
-
-namespace TasksPlanningWPFTest
+﻿
+namespace TaskLibrary
 {
     public class Employ
     {
         private readonly List<Task> _workedTasks = new List<Task>();
         public float CurrentWorkTime => _workedTasks.Sum(task => task.SelfCost);
-        public readonly string Name = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-        public DateTime EndLastTask = System.DateTime.Parse("00:00");
+        public readonly string Name = new Guid().ToString()[..4];
+        public DateTime EndLastTask = DateTime.Parse("00:00");
         
         public void AddWorkTask(Task task)
         {
@@ -28,6 +27,11 @@ namespace TasksPlanningWPFTest
             }
 
             Console.WriteLine(res);
+        }
+
+        public override string ToString()
+        {
+            return $"Worker: {Name} | AllTime: {EndLastTask.TimeOfDay.TotalHours}";
         }
     }
 }

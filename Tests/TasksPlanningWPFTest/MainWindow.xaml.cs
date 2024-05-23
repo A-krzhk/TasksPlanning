@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using TaskLibrary;
+using Task = TaskLibrary.Task;
 
 namespace TasksPlanningWPFTest
 {
@@ -40,7 +42,7 @@ namespace TasksPlanningWPFTest
             AddDepBtn.IsEnabled = true;
             TaskId.Content = task.Id;
             TaskDependecies.Items.Clear();
-            foreach (var t in task.Dep)
+            foreach (var t in task.Depenedencies)
             {
                 TaskDependecies.Items.Add(t);
             }
@@ -57,10 +59,10 @@ namespace TasksPlanningWPFTest
             {
                 var taskToAdd = _taskTracker.AllTasks.FirstOrDefault(x => x.Id == res);
                 if (taskToAdd != null) 
-                    task.Dep.Add(taskToAdd);
+                    task.Depenedencies.Add(taskToAdd);
                 
                 TaskDependecies.Items.Clear();
-                foreach (var t in task.Dep)
+                foreach (var t in task.Depenedencies)
                 {
                     TaskDependecies.Items.Add(t);
                 }
