@@ -19,7 +19,7 @@ namespace TasksPlanning.Views.Windows
             WindowViewModel.TaskTracker.AddTask(new Task(11));
             WindowViewModel.TaskTracker.AllEmploy.Add(new Employ());
             WindowViewModel.TaskTracker.AllEmploy.Add(new Employ());
-            WindowViewModel.NewTaskCost = "1";
+       
             WindowViewModel.TaskTracker.RandomizeDep();
         }
 
@@ -41,5 +41,21 @@ namespace TasksPlanning.Views.Windows
         {
             WindowViewModel.TaskTracker.PlanTasks();
         }
+
+        private void ShowTree(object sender, RoutedEventArgs e)
+        {
+            TreeWindow treeWindow = new TreeWindow();
+            foreach(var task in WindowViewModel.TaskTracker.AllTasks)
+            {
+                treeWindow.graph.AddNode(task.Name);
+                foreach (var dep in task.Depenedencies)
+                {
+                    treeWindow.graph.AddEdge(dep.Name, task.Name);
+                }
+            }
+            treeWindow.Show();
+        }
+
+        
     }
 }
