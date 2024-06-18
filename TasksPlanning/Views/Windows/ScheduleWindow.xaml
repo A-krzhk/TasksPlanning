@@ -1,0 +1,19 @@
+﻿<Window x:Class="TasksPlanning.Views.Windows.ScheduleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:TasksPlanning.Views.Windows"
+        mc:Ignorable="d"
+        Title="ScheduleWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="EmployView">
+        </ListView>
+        <ListView Grid.Column="1" x:Name="TasksView">
+        </ListView>
+    </Grid>
+</Window>

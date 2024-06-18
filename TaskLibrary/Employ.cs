@@ -5,9 +5,11 @@ namespace TaskLibrary
     {
         private readonly List<Task> _workedTasks = new List<Task>();
         public float CurrentWorkTime => _workedTasks.Sum(task => task.SelfCost);
-        public readonly string Name = new Guid().ToString()[..4];
+        public readonly string Name = (new Random().Next()).ToString("D")[..3];
         public DateTime EndLastTask = DateTime.Parse("00:00");
-        
+
+        public IReadOnlyList<Task> WorkedTasks => _workedTasks;
+
         public void AddWorkTask(Task task)
         {
             var start = EndLastTask.TimeOfDay > task.StartWork.TimeOfDay ? EndLastTask : task.StartWork;
@@ -31,7 +33,7 @@ namespace TaskLibrary
 
         public override string ToString()
         {
-            return $"Worker: {Name} | AllTime: {EndLastTask.TimeOfDay.TotalHours}";
+            return $"Worker: {Name}";
         }
     }
 }

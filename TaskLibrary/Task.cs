@@ -7,10 +7,22 @@ namespace TaskLibrary
 {
     public class Task : INotifyPropertyChanged
     {
-        private readonly ObservableCollection<Task> Dep = new ObservableCollection<Task>();
+        private ObservableCollection<Task> Dep = new();
         private float _selfCost;
         private float _totalCost;
         private string _taskDependenciesString;
+
+        public Task Clone()
+        {
+            return new Task(Id)
+            {
+                _selfCost = _selfCost,
+                _totalCost = _totalCost,
+                _taskDependenciesString = _taskDependenciesString,
+                Dep = new ObservableCollection<Task>(Dep.ToArray()),
+                Worker = Worker,
+            };
+        }
         
         public float SelfCost
         {
@@ -52,14 +64,25 @@ namespace TaskLibrary
         public readonly uint Id;
         private static uint _nextUid;
         public static uint GetNextUid() => ++_nextUid;
-        public string Name
-        {
-            get => Id.ToString();
-        }
-        
+        public string Name => Id.ToString();
+
         public Task(int cost = 0)
         {
             Id = GetNextUid();
+            if (cost == 0)
+            {
+                var rand = new Random();
+                SelfCost = rand.Next(1, 10);
+            }
+            else
+            {
+                SelfCost = cost;
+            }
+        }
+        
+        public Task(uint id, int cost = 0)
+        {
+            Id = id;
             if (cost == 0)
             {
                 var rand = new Random();
@@ -92,18 +115,12 @@ namespace TaskLibrary
 
         public void Print()
         {
-            var res = $"Task №{Id}, Self {SelfCost} Total {TotalCost} \n";
-            foreach (var dep in Dep)
-            {
-                res += $"   dep {dep.Id}|{dep.SelfCost}\n";
-            }
-
-            Console.WriteLine(res);
+            Console.WriteLine(ReturnPrint());
         }
 
         public string ReturnPrint()
         {
-            var res = $"Task №{Id}, Self {SelfCost} Total {TotalCost} \n";
+            var res = $"{ToString()}\n";
             foreach (var dep in Dep)
             {
                 res += $"   dep {dep.Id}|{dep.SelfCost}\n";

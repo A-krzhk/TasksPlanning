@@ -11,11 +11,12 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="{materialDesign:MaterialDesignFont}"
-        Height="auto" Width="800">
+        Height="auto" Width="1200">
+   
     <Window.DataContext>
         <vm:MainWindowViewModel x:Name="WindowViewModel"/>
     </Window.DataContext>
-    <Grid ShowGridLines="False">
+    <Grid ShowGridLines="True">
 
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -23,7 +24,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="500"/>
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -32,7 +33,6 @@
             Grid.ColumnSpan="1" 
             Grid.RowSpan="3"
             Width="Auto"
-            Background="Cornsilk" 
             ItemsSource="{Binding TaskTracker.AllTasks, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedOneClickTask}">
             <!--SelectedItem="{Binding  SelectedTask}"-->
             <i:Interaction.Triggers>
@@ -49,9 +49,16 @@
                     <GridViewColumn Header="Dependencies" DisplayMemberBinding="{Binding DependenciesString, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Width="100"/>
                 </GridView>
             </ListView.View>
+            
         </ListView>
 
-        <ListView Grid.ColumnSpan="1" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Background="Beige" ItemsSource="{Binding TaskTracker.AllEmploy, UpdateSourceTrigger=PropertyChanged}"/>
+        <ListView
+            Grid.Column="1" 
+            Grid.Row="0"
+            Grid.RowSpan="3"  
+            ItemsSource="{Binding TaskTracker.AllEmploy, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding SelectedEmploy}"/>
+        
         <StackPanel Background="#FFE6E6FA" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" >
             <Label x:Name="Label1" Content=""  MinWidth="200"/>
             <TextBox TextWrapping="Wrap" Text="{Binding NewTaskCost}" />
@@ -61,7 +68,6 @@
             <Button Content="Make a schedule" Width="Auto" Click="PlainTasks"/>
             <Separator Opacity="0" Height="10"></Separator>
             <Button Content="Show the dependency tree" Width="Auto" Click="ShowTree"/>
-
         </StackPanel>
 
         <StackPanel Background="#FFE6E6FA"  Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" >
@@ -83,6 +89,11 @@
                 </ScrollViewer>
             </Border>
         </StackPanel>
+        <StackPanel Background="#FFE6E6FA"  Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom">
+            <Button Content="Add Worker" Width="Auto" Click="AddWorker"/>
+            <Button Content="Remove Worker" Width="Auto" Command="{Binding RemoveWorkerBinding}" 
+                    CommandParameter="{Binding SelectedEmploy}"/>
+        </StackPanel> 
 
     </Grid>
 </Window>

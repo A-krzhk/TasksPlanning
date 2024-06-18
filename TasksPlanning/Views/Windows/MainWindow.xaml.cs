@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Specialized;
+using System.Windows;
 using TaskLibrary;
 using Task = TaskLibrary.Task;
 
@@ -9,6 +10,8 @@ namespace TasksPlanning.Views.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
+        private TreeWindow? _openedTreeWindow;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -21,6 +24,13 @@ namespace TasksPlanning.Views.Windows
             WindowViewModel.TaskTracker.AllEmploy.Add(new Employ());
        
             WindowViewModel.TaskTracker.RandomizeDep();
+            WindowViewModel.TaskTracker.AllTasks.CollectionChanged += OnPropertyChanged;
+        }
+
+        
+        private void OnPropertyChanged(object? sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            _openedTreeWindow?.RefreshUi(WindowViewModel);
         }
 
         private void ButtonBase_OnClickAddTask(object sender, RoutedEventArgs e)
@@ -40,22 +50,31 @@ namespace TasksPlanning.Views.Windows
         private void PlainTasks(object sender, RoutedEventArgs e)
         {
             WindowViewModel.TaskTracker.PlanTasks();
+            var window = new ScheduleWindow(WindowViewModel.TaskTracker.AllEmploy, WindowViewModel.TaskTracker.AllEmploy.SelectMany(employ => employ.WorkedTasks))
+            {
+                Owner = this
+            };
+            window.Show();
         }
 
         private void ShowTree(object sender, RoutedEventArgs e)
         {
-            TreeWindow treeWindow = new TreeWindow();
-            foreach(var task in WindowViewModel.TaskTracker.AllTasks)
+            if (_openedTreeWindow == null)
             {
-                treeWindow.graph.AddNode(task.Name);
-                foreach (var dep in task.Depenedencies)
+                _openedTreeWindow = new TreeWindow
                 {
-                    treeWindow.graph.AddEdge(dep.Name, task.Name);
-                }
+                    Owner = this
+                };
+                _openedTreeWindow.Closed += (o, args) => _openedTreeWindow = null; 
             }
-            treeWindow.Show();
+           
+            _openedTreeWindow.RefreshUi(WindowViewModel);
+            _openedTreeWindow.Show();
         }
 
-        
+        private void AddWorker(object sender, RoutedEventArgs e)
+        {
+            WindowViewModel.TaskTracker.AllEmploy.Add(new Employ());
+        }
     }
 }

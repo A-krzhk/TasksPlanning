@@ -11,6 +11,7 @@ namespace TaskLibrary
         private ObservableCollection<Employ> _allEmploy = new ObservableCollection<Employ>();
         private List<Task> _taskToDistribution = new List<Task>();
 
+        private Dictionary<string, TempTask> _tempTasks = new Dictionary<string, TempTask>();
         public ObservableCollection<Task> AllTasks => _allTasks;
 
         public ObservableCollection<Employ> AllEmploy
@@ -34,16 +35,20 @@ namespace TaskLibrary
 
         public void RecalculateTotalCost()
         {
-            var zeroDep = _taskToDistribution.Where(task => task.Depenedencies.Count == 0);
+            var zeroDep = _tempTasks.Values.Where(task => task.Dependencies.Count == 0);
             foreach (var task in zeroDep)
             {
-                if (!_taskToDistribution.Any(x => x.Depenedencies.Contains(task)))
+                TempTask tempTask;
+                if (!_tempTasks.Values.Any(x => x.Dependencies.Contains(task.Uid)))
                 {
-                    task.TotalCost = task.SelfCost;
+                    tempTask = _tempTasks[task.Uid];
+                    tempTask.TotalCost = task.SelfCost;
+                    _tempTasks[task.Uid] = tempTask;
                     continue;
                 }
-
-                task.TotalCost = GetTotalCostInDependecies(task);
+                tempTask = _tempTasks[task.Uid];
+                tempTask.TotalCost = GetTotalCostInDependecies(ref task);
+                _tempTasks[task.Uid] = tempTask;
             }
         }
 
@@ -87,34 +92,34 @@ namespace TaskLibrary
                 task.Print();
             }
         }
-
-        public string PrintFirst()
+        
+        public void PrintWorkers()
         {
-            return _allTasks.First().ReturnPrint();
+            foreach (var task in AllEmploy)
+            {
+                task.Print();
+            }
         }
         
         public void PlanTasks()
         {
-            var first = true;
             _taskToDistribution.Clear();
+            _tempTasks.Clear();
+            
             foreach (var task in _allTasks)
             {
-                _taskToDistribution.Add(task);
+                //_taskToDistribution.Add(task);
+                _tempTasks.Add(task.Name, new TempTask(task));
             }
             
-            while (_taskToDistribution.Count != 0)
+            while (_tempTasks.Count != 0)
             {
                 RecalculateTotalCost();
-                if (first)
-                {
-                    Print();
-                    first = false;
-                }
+
                 var importantTask = GetHighestTask();
                 if (importantTask is null)
-                {
-                    return;
-                }
+                    break;
+                
                 var employ = GetLowestEmploy();
                 employ.AddWorkTask(importantTask);
                 importantTask.SetWorker(employ);
@@ -143,6 +148,26 @@ namespace TaskLibrary
             field = value;
             OnPropertyChanged(propertyName);
             return true;
+        }
+
+        public struct TempTask
+        {
+            public string Uid;
+            public float SelfCost;
+            public float TotalCost;
+            public List<string> Dependencies;
+
+            public TempTask(Task task)
+            {
+                TotalCost = task.TotalCost;
+                SelfCost = task.SelfCost;
+                Uid = task.Name;
+                Dependencies = new List<string>();
+                foreach (var depenedency in task.Depenedencies)
+                {
+                    Dependencies.Add(depenedency.Name);
+                }
+            }
         }
     }
 }
