@@ -1,4 +1,5 @@
 ﻿
+using System.Buffers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -11,7 +12,6 @@ namespace TaskLibrary
         private ObservableCollection<Employ> _allEmploy = new ObservableCollection<Employ>();
         private List<Task> _taskToDistribution = new List<Task>();
 
-        private Dictionary<string, TempTask> _tempTasks = new Dictionary<string, TempTask>();
         public ObservableCollection<Task> AllTasks => _allTasks;
 
         public ObservableCollection<Employ> AllEmploy
@@ -35,20 +35,15 @@ namespace TaskLibrary
 
         public void RecalculateTotalCost()
         {
-            var zeroDep = _tempTasks.Values.Where(task => task.Dependencies.Count == 0);
+            var zeroDep = _taskToDistribution.Where(task => task.Depenedencies.Count == 0);
             foreach (var task in zeroDep)
             {
-                TempTask tempTask;
-                if (!_tempTasks.Values.Any(x => x.Dependencies.Contains(task.Uid)))
+                if (!_taskToDistribution.Any(x => x.Depenedencies.Contains(task)))
                 {
-                    tempTask = _tempTasks[task.Uid];
-                    tempTask.TotalCost = task.SelfCost;
-                    _tempTasks[task.Uid] = tempTask;
+                    task.TotalCost = task.SelfCost;
                     continue;
                 }
-                tempTask = _tempTasks[task.Uid];
-                tempTask.TotalCost = GetTotalCostInDependecies(ref task);
-                _tempTasks[task.Uid] = tempTask;
+                task.TotalCost = GetTotalCostInDependecies(task);
             }
         }
 
@@ -104,15 +99,20 @@ namespace TaskLibrary
         public void PlanTasks()
         {
             _taskToDistribution.Clear();
-            _tempTasks.Clear();
-            
-            foreach (var task in _allTasks)
+            var pool = ArrayPool<Task[]>.Shared.Rent(_allTasks.Count);
+            foreach (var employ in _allEmploy)
             {
-                //_taskToDistribution.Add(task);
-                _tempTasks.Add(task.Name, new TempTask(task));
+                employ.Clear();
             }
-            
-            while (_tempTasks.Count != 0)
+
+            for (var index = 0; index < _allTasks.Count; index++)
+            {
+                var task = _allTasks[index];
+                _taskToDistribution.Add(task);
+                pool[index] = task.Depenedencies.ToArray();
+            }
+
+            while (_taskToDistribution.Count != 0)
             {
                 RecalculateTotalCost();
 
@@ -130,6 +130,16 @@ namespace TaskLibrary
                     task2.RemoveDependency(importantTask);
                 }
             }
+            
+            for (var index = 0; index < _allTasks.Count; index++)
+            {
+                var task = _allTasks[index];
+                foreach (var t in pool[index])
+                {
+                    task.AddDependency(t);
+                }
+            }
+            ArrayPool<Task[]>.Shared.Return(pool);
         }
         
         
@@ -148,26 +158,6 @@ namespace TaskLibrary
             field = value;
             OnPropertyChanged(propertyName);
             return true;
-        }
-
-        public struct TempTask
-        {
-            public string Uid;
-            public float SelfCost;
-            public float TotalCost;
-            public List<string> Dependencies;
-
-            public TempTask(Task task)
-            {
-                TotalCost = task.TotalCost;
-                SelfCost = task.SelfCost;
-                Uid = task.Name;
-                Dependencies = new List<string>();
-                foreach (var depenedency in task.Depenedencies)
-                {
-                    Dependencies.Add(depenedency.Name);
-                }
-            }
         }
     }
 }

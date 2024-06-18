@@ -50,7 +50,7 @@ namespace TasksPlanning.Views.Windows
         private void PlainTasks(object sender, RoutedEventArgs e)
         {
             WindowViewModel.TaskTracker.PlanTasks();
-            var window = new ScheduleWindow(WindowViewModel.TaskTracker.AllEmploy, WindowViewModel.TaskTracker.AllEmploy.SelectMany(employ => employ.WorkedTasks))
+            var window = new ScheduleWindow(WindowViewModel.TaskTracker.AllEmploy.Select(x => x.GetFullString()), WindowViewModel.TaskTracker.AllEmploy.SelectMany(employ => employ.WorkedTasks))
             {
                 Owner = this
             };
