@@ -12,6 +12,7 @@ namespace TaskLibrary
 
         public void Clear()
         {
+            EndLastTask = DateTime.Parse("00:00");
             _workedTasks.Clear();
         }
         

@@ -66,6 +66,12 @@ namespace TaskLibrary
         public static uint GetNextUid() => ++_nextUid;
         public string Name => Id.ToString();
 
+        internal void Reset()
+        {
+            StartWork = default;
+            EndWork = default;
+        }
+
         public Task(int cost = 0)
         {
             Id = GetNextUid();
@@ -139,6 +145,8 @@ namespace TaskLibrary
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+       
     }
 }
 

@@ -83,13 +83,34 @@ namespace TasksPlanning.ViewModels
                         SelectedOneClickTask is not null && 
                         !task.Depenedencies.Contains(SelectedOneClickTask) &&
                         !SelectedOneClickTask.Depenedencies.Contains(task))
+
                     {
+                        var contains = CheckCircual(SelectedOneClickTask, task);
+                        if (contains)
+                        {
+                            Title = "Circular Dep";
+                            return;
+                        }
+
                         task.AddDependency(SelectedOneClickTask);
                     }
 
                     OnPropertyChanged(nameof(Dependecies));
                 });
             }
+        }
+
+        private bool CheckCircual(Task selfTask, Task targetTask)
+        {
+            //var any = !selfTask.Depenedencies.Any(x => x == targetTask);
+            foreach (var item in selfTask.Depenedencies)
+            {
+                if (selfTask.Depenedencies.Contains(targetTask) || CheckCircual(item, targetTask))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private RelayCommand? _removeWorkerBinding;

@@ -108,13 +108,15 @@ namespace TaskLibrary
             for (var index = 0; index < _allTasks.Count; index++)
             {
                 var task = _allTasks[index];
+                task.Reset();
                 _taskToDistribution.Add(task);
                 pool[index] = task.Depenedencies.ToArray();
             }
+            RecalculateTotalCost();
+
 
             while (_taskToDistribution.Count != 0)
             {
-                RecalculateTotalCost();
 
                 var importantTask = GetHighestTask();
                 if (importantTask is null)

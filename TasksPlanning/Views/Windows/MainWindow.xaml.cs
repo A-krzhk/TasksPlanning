@@ -15,11 +15,11 @@ namespace TasksPlanning.Views.Windows
         public MainWindow()
         {
             InitializeComponent();
-            WindowViewModel.TaskTracker.AddTask(new Task(11));
-            WindowViewModel.TaskTracker.AddTask(new Task(51));
             WindowViewModel.TaskTracker.AddTask(new Task(1));
-            WindowViewModel.TaskTracker.AddTask(new Task(15));
-            WindowViewModel.TaskTracker.AddTask(new Task(11));
+            WindowViewModel.TaskTracker.AddTask(new Task(5));
+            WindowViewModel.TaskTracker.AddTask(new Task(1));
+            WindowViewModel.TaskTracker.AddTask(new Task(5));
+            WindowViewModel.TaskTracker.AddTask(new Task(3));
             WindowViewModel.TaskTracker.AllEmploy.Add(new Employ());
             WindowViewModel.TaskTracker.AllEmploy.Add(new Employ());
        
