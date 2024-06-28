@@ -49,7 +49,7 @@ namespace TaskLibrary
             get => _taskDependenciesString;
             set
             {
-                _taskDependenciesString = Dep.Aggregate("", (current, dep) => current + $"   dep {dep.Id}|{dep.SelfCost}\n");
+                _taskDependenciesString = Dep.Aggregate("", (current, dep) => current + $"   task {dep.Id}| time {dep.SelfCost}\n");
                 OnPropertyChanged();
             }
         }
@@ -58,8 +58,8 @@ namespace TaskLibrary
 
         public Employ Worker { get; private set; }
 
-        public DateTime StartWork;
-        public DateTime EndWork;
+        public float StartWork;
+        public float EndWork;
         
         public readonly uint Id;
         private static uint _nextUid;
@@ -68,8 +68,8 @@ namespace TaskLibrary
 
         internal void Reset()
         {
-            StartWork = default;
-            EndWork = default;
+            StartWork = 0;
+            EndWork = 0;
         }
 
         public Task(int cost = 0)

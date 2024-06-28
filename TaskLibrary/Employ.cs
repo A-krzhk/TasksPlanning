@@ -1,26 +1,24 @@
-﻿
+﻿using System.Collections.Generic;
 namespace TaskLibrary
 {
     public class Employ
     {
         private readonly List<Task> _workedTasks = new List<Task>();
         public float CurrentWorkTime => _workedTasks.Sum(task => task.SelfCost);
-        public readonly string Name = (new Random().Next()).ToString("D")[..3];
-        public DateTime EndLastTask = DateTime.Parse("00:00");
-
+        public string Name { get; set; } = (new Random().Next()).ToString("D")[..3];
+        public float EndLastTask = 0;
         public IReadOnlyList<Task> WorkedTasks => _workedTasks;
-
         public void Clear()
         {
-            EndLastTask = DateTime.Parse("00:00");
+            EndLastTask = 0;
             _workedTasks.Clear();
         }
         
         public void AddWorkTask(Task task)
         {
-            var start = EndLastTask.TimeOfDay > task.StartWork.TimeOfDay ? EndLastTask : task.StartWork;
+            var start = EndLastTask > task.StartWork ? EndLastTask : task.StartWork;
             task.StartWork = start;
-            task.EndWork = start + TimeSpan.FromHours(task.SelfCost);
+            task.EndWork = start + task.SelfCost;
             EndLastTask = task.EndWork;
             
             _workedTasks.Add(task);
@@ -33,10 +31,10 @@ namespace TaskLibrary
 
         public string GetFullString()
         {
-            var res = $"Worked AllTime: {EndLastTask.TimeOfDay.TotalHours}";
+            var res = $"Worked AllTime: {EndLastTask}";
             foreach (var task in _workedTasks)
             {
-                res += $"\n {task.Id} ({task.StartWork.TimeOfDay:hh} | {task.EndWork.TimeOfDay:hh})";
+                res += $"\n {task.Id} ({task.StartWork} | {task.EndWork})";
             }
 
             return res;
@@ -44,7 +42,7 @@ namespace TaskLibrary
     
         public override string ToString()
         {
-            return $"Worker: {Name}";
+            return $"Worker ID: {Name}";
         }
     }
 }

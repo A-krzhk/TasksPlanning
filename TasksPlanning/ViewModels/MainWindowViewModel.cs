@@ -1,28 +1,31 @@
-﻿using System.Collections.ObjectModel;
+﻿using Microsoft.Msagl.DebugHelpers;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using TaskLibrary;
 using TasksPlanning.ViewModels.Base;
 using Task = TaskLibrary.Task;
 
+
 namespace TasksPlanning.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
-        public const string NewTaskPlaceHolder = "Введите стоимость новой таски (int)";
-        private string _title= "Планировщик задач";
+        public const string NewTaskPlaceHolder = "Enter the duration of the task";
         private string _newTaskCost = NewTaskPlaceHolder;
         
         private Task? _selectedTask;
         private Task? _selectedOneClickTask;
         private Employ? _selectedEmploy;
+        private TaskTracker _endAllTasks;
         public TaskTracker TaskTracker { get; set; }
 
-        public string Title
+        public TaskTracker? EndAllTasks
         {
-            get => _title;
-            set => Set(ref _title, value);
+            get => _endAllTasks;
+            set => Set(ref _endAllTasks, value);
         }
-        
+
         public Task? SelectedTask
         {
             get => _selectedTask;
@@ -68,6 +71,7 @@ namespace TasksPlanning.ViewModels
         public MainWindowViewModel()
         {
             TaskTracker = new TaskTracker();
+            
         }
 
         public ObservableCollection<Task>? Dependecies => _selectedTask?.Depenedencies;
@@ -80,15 +84,15 @@ namespace TasksPlanning.ViewModels
                 return _addDependencyCommand ??= new RelayCommand(obj =>
                 {
                     if (obj is Task task && 
-                        SelectedOneClickTask is not null && 
-                        !task.Depenedencies.Contains(SelectedOneClickTask) &&
-                        !SelectedOneClickTask.Depenedencies.Contains(task))
+                        SelectedOneClickTask is not null)
 
                     {
-                        var contains = CheckCircual(SelectedOneClickTask, task);
+                        var contains = task.Depenedencies.Contains(SelectedOneClickTask) ||
+                            SelectedOneClickTask.Depenedencies.Contains(task) || 
+                            CheckCircual(SelectedOneClickTask, task);
                         if (contains)
                         {
-                            Title = "Circular Dep";
+                            MessageBox.Show("The dependency is not added because you are trying to make a cyclic dependency");
                             return;
                         }
 
@@ -102,7 +106,7 @@ namespace TasksPlanning.ViewModels
 
         private bool CheckCircual(Task selfTask, Task targetTask)
         {
-            //var any = !selfTask.Depenedencies.Any(x => x == targetTask);
+            
             foreach (var item in selfTask.Depenedencies)
             {
                 if (selfTask.Depenedencies.Contains(targetTask) || CheckCircual(item, targetTask))

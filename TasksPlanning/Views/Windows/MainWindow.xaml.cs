@@ -22,7 +22,7 @@ namespace TasksPlanning.Views.Windows
             WindowViewModel.TaskTracker.AddTask(new Task(3));
             WindowViewModel.TaskTracker.AllEmploy.Add(new Employ());
             WindowViewModel.TaskTracker.AllEmploy.Add(new Employ());
-       
+
             WindowViewModel.TaskTracker.RandomizeDep();
             WindowViewModel.TaskTracker.AllTasks.CollectionChanged += OnPropertyChanged;
         }
@@ -39,18 +39,20 @@ namespace TasksPlanning.Views.Windows
             {
                 var task = new Task(res);
                 WindowViewModel.TaskTracker.AddTask(task);
-                Label1.Content = $"Таска {task.Id} добавлена";
+                Label1.Content = $"Task {task.Id} added";
             }
             else
             {
-                Label1.Content = "Введите целое число";
+                MessageBox.Show("Enter a number in the field above the button 'Add Task'!");
             }
         }
 
         private void PlainTasks(object sender, RoutedEventArgs e)
         {
             WindowViewModel.TaskTracker.PlanTasks();
-            var window = new ScheduleWindow(WindowViewModel.TaskTracker.AllEmploy.Select(x => x.GetFullString()), WindowViewModel.TaskTracker.AllEmploy.SelectMany(employ => employ.WorkedTasks))
+            var window = new ScheduleWindow(WindowViewModel.TaskTracker.AllEmploy.ToArray(), 
+                WindowViewModel.TaskTracker.AllEmploy.Select(x => x.GetFullString()), 
+                WindowViewModel.TaskTracker.AllEmploy.SelectMany(employ => employ.WorkedTasks))
             {
                 Owner = this
             };

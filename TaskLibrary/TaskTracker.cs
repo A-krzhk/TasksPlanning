@@ -77,7 +77,7 @@ namespace TaskLibrary
         {
             _allTasks[0].AddDependency(_allTasks[1]);
             _allTasks[0].AddDependency(_allTasks[2]);
-            _allTasks[2].AddDependency(_allTasks[4]);        
+            _allTasks[2].AddDependency(_allTasks[4]);
         }
 
         public void Print()

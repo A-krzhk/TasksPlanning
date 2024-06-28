@@ -16,7 +16,7 @@
     <Window.DataContext>
         <vm:MainWindowViewModel x:Name="WindowViewModel"/>
     </Window.DataContext>
-    <Grid ShowGridLines="True">
+    <Grid ShowGridLines="False">
 
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -45,8 +45,7 @@
                 <GridView>
                     <GridViewColumn Header="Task Name" DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Self Cost" DisplayMemberBinding="{Binding SelfCost}" />
-                    <GridViewColumn Header="Total Cost" DisplayMemberBinding="{Binding TotalCost}" />
-                    <GridViewColumn Header="Dependencies" DisplayMemberBinding="{Binding DependenciesString, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Width="100"/>
+                    <GridViewColumn Header="Dependencies" DisplayMemberBinding="{Binding DependenciesString, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
                 </GridView>
             </ListView.View>
             
@@ -67,7 +66,7 @@
             <Separator Opacity="0" Height="10"></Separator>
             <Button Content="Make a schedule" Width="Auto" Click="PlainTasks"/>
             <Separator Opacity="0" Height="10"></Separator>
-            <Button Content="Show the dependency tree" Width="Auto" Click="ShowTree"/>
+            <Button Content="Show the dependency graph" Width="Auto" Click="ShowTree"/>
         </StackPanel>
 
         <StackPanel Background="#FFE6E6FA"  Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" >
