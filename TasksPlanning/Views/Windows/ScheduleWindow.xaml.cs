@@ -19,7 +19,7 @@ public partial class ScheduleWindow : System.Windows.Window
         EmployView.ItemsSource = resultStringAllEmploy;
         TasksView.ItemsSource = taskTrackerTaskToDistribution;
         EndLastTask.Content = "Time of all works: " + taskTrackerAllEmploy.MaxBy(x => x.EndLastTask).EndLastTask;
-        return;
+        
 
     }
 
@@ -33,18 +33,22 @@ public partial class ScheduleWindow : System.Windows.Window
             var rowOffset = 2;
 
             worksheet.Cells[1, 1].Value = "Worker ID";
-            worksheet.Cells[1, 2].Value = "Task number";
-            worksheet.Cells[1, 3].Value = "Time start";
-            worksheet.Cells[1, 4].Value = "Time end";
+            worksheet.Cells[1, 2].Value = "Worker time %";
+            worksheet.Cells[1, 3].Value = "Task number";
+            worksheet.Cells[1, 4].Value = "Time start";
+            worksheet.Cells[1, 5].Value = "Time end";
+
 
             for (int i = 0; i < allEmp.Count; i++)
             {
                 worksheet.Cells[i + rowOffset + counter, 1].Value = allEmp[i].Name;
+                worksheet.Cells[i + rowOffset + counter, 2].Value = (allEmp[i].workDuration / allEmp[i].workMaxTime) * 100;
+
                 for (int j = 0; j < allEmp[i].WorkedTasks.Count; j++)
                 {
-                    worksheet.Cells[j + i + rowOffset + counter, 2].Value = allEmp[i].WorkedTasks[j].Name;
-                    worksheet.Cells[j + i + rowOffset + counter, 3].Value = allEmp[i].WorkedTasks[j].StartWork;
-                    worksheet.Cells[j + i + rowOffset + counter, 4].Value = allEmp[i].WorkedTasks[j].EndWork;
+                    worksheet.Cells[j + i + rowOffset + counter, 3].Value = allEmp[i].WorkedTasks[j].Name;
+                    worksheet.Cells[j + i + rowOffset + counter, 4].Value = allEmp[i].WorkedTasks[j].StartWork;
+                    worksheet.Cells[j + i + rowOffset + counter, 5].Value = allEmp[i].WorkedTasks[j].EndWork;
                 }
                 counter = allEmp[i].WorkedTasks.Count-1;
             }

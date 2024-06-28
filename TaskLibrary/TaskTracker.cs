@@ -11,7 +11,7 @@ namespace TaskLibrary
         private ObservableCollection<Task> _allTasks = new ObservableCollection<Task>();
         private ObservableCollection<Employ> _allEmploy = new ObservableCollection<Employ>();
         private List<Task> _taskToDistribution = new List<Task>();
-
+        
         public ObservableCollection<Task> AllTasks => _allTasks;
 
         public ObservableCollection<Employ> AllEmploy
@@ -131,6 +131,12 @@ namespace TaskLibrary
                     task2.StartWork = importantTask.EndWork;
                     task2.RemoveDependency(importantTask);
                 }
+            }
+
+            float endTasks = AllEmploy.MaxBy(x => x.EndLastTask).EndLastTask;
+            foreach (var employ in AllEmploy)
+            {
+                employ.workMaxTime = endTasks;
             }
             
             for (var index = 0; index < _allTasks.Count; index++)
