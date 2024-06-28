@@ -1,0 +1,97 @@
+﻿<Window x:Class="TasksPlanning.Views.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:vm="clr-namespace:TasksPlanning.ViewModels"
+        Style="{StaticResource MaterialDesignWindow}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        Height="auto" Width="1200">
+   
+    <Window.DataContext>
+        <vm:MainWindowViewModel x:Name="WindowViewModel"/>
+    </Window.DataContext>
+    <Grid ShowGridLines="False">
+
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ListView 
+            HorizontalAlignment="Stretch"
+            Grid.ColumnSpan="1" 
+            Grid.RowSpan="3"
+            Width="Auto"
+            ItemsSource="{Binding TaskTracker.AllTasks, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedOneClickTask}">
+            <!--SelectedItem="{Binding  SelectedTask}"-->
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding TaskDoubleClickCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" />
+                </i:EventTrigger>
+
+            </i:Interaction.Triggers>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Task Name" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Self Cost" DisplayMemberBinding="{Binding SelfCost}" />
+                    <GridViewColumn Header="Dependencies" DisplayMemberBinding="{Binding DependenciesString, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                </GridView>
+            </ListView.View>
+            
+        </ListView>
+
+        <ListView
+            Grid.Column="1" 
+            Grid.Row="0"
+            Grid.RowSpan="3"  
+            ItemsSource="{Binding TaskTracker.AllEmploy, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding SelectedEmploy}"/>
+        
+        <StackPanel Background="#FFE6E6FA" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" >
+            <Label x:Name="Label1" Content=""  MinWidth="200"/>
+            <TextBox TextWrapping="Wrap" Text="{Binding NewTaskCost}" />
+            <Separator Opacity="0" Height="10"></Separator>
+            <Button Content="Add new Task" Width="Auto" Click="ButtonBase_OnClickAddTask"  />
+            <Separator Opacity="0" Height="10"></Separator>
+            <Button Content="Make a schedule" Width="Auto" Click="PlainTasks"/>
+            <Separator Opacity="0" Height="10"></Separator>
+            <Button Content="Show the dependency graph" Width="Auto" Click="ShowTree"/>
+        </StackPanel>
+
+        <StackPanel Background="#FFE6E6FA"  Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" >
+            <Label x:Name="TaskInfo" Content="Task Info"  MinWidth="200"/>
+            <Label x:Name="TaskId" Content="{Binding SelectedTask}"  MinWidth="200"/>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Dependecy Id:"/>
+                <Label Content="{Binding SelectedOneClickTask.Name, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <Button x:Name="AddDepBtn" Content="Add Dependency" Command="{Binding AddDependencyCommand}" CommandParameter="{Binding SelectedTask}"/>
+            <!--Click="AddDepBtn_OnClick"-->
+
+            <Label Content="Dependecies"  MinWidth="200"/>
+            <Border  BorderBrush="#efd9f0" BorderThickness="2">
+                <ScrollViewer  Height="180" Padding="10">
+                    <ListView  x:Name="TaskDependecies" ItemsSource="{Binding Dependecies, UpdateSourceTrigger=PropertyChanged}">
+                    </ListView>
+                </ScrollViewer>
+            </Border>
+        </StackPanel>
+        <StackPanel Background="#FFE6E6FA"  Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom">
+            <Button Content="Add Worker" Width="Auto" Click="AddWorker"/>
+            <Button Content="Remove Worker" Width="Auto" Command="{Binding RemoveWorkerBinding}" 
+                    CommandParameter="{Binding SelectedEmploy}"/>
+        </StackPanel> 
+
+    </Grid>
+</Window>
