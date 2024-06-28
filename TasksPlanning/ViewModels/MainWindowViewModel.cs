@@ -89,10 +89,10 @@ namespace TasksPlanning.ViewModels
                     {
                         var contains = task.Depenedencies.Contains(SelectedOneClickTask) ||
                             SelectedOneClickTask.Depenedencies.Contains(task) || 
-                            CheckCircual(SelectedOneClickTask, task);
+                            CheckCircual(SelectedOneClickTask, task) || CheckCircual(task, SelectedOneClickTask);
                         if (contains)
                         {
-                            MessageBox.Show("The dependency is not added because you are trying to make a cyclic dependency");
+                            MessageBox.Show("The dependency is not added because you are trying to make a cyclic dependency, or this dependence already transmitted by transitivity");
                             return;
                         }
 
@@ -109,13 +109,14 @@ namespace TasksPlanning.ViewModels
             
             foreach (var item in selfTask.Depenedencies)
             {
-                if (selfTask.Depenedencies.Contains(targetTask) || CheckCircual(item, targetTask))
+                if (selfTask.Depenedencies.Contains(targetTask) || CheckCircual(item, targetTask) || item == targetTask)
                 {
                     return true;
                 }
             }
             return false;
         }
+
 
         private RelayCommand? _removeWorkerBinding;
         public RelayCommand RemoveWorkerBinding  {
