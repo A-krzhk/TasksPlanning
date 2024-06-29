@@ -14,13 +14,10 @@ public partial class ScheduleWindow : System.Windows.Window
     public ScheduleWindow(IReadOnlyList<Employ> taskTrackerAllEmploy, IEnumerable<string> resultStringAllEmploy, IEnumerable<Task> taskTrackerTaskToDistribution)
     {
         _taskTrackerAllEmploy = taskTrackerAllEmploy;
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         InitializeComponent();
         EmployView.ItemsSource = resultStringAllEmploy;
         TasksView.ItemsSource = taskTrackerTaskToDistribution;
         EndLastTask.Content = "Time of all works: " + taskTrackerAllEmploy.MaxBy(x => x.EndLastTask).EndLastTask;
-        
-
     }
 
     public void ExportDataGridToExcel(IReadOnlyList<Employ> allEmp, string filePath)
@@ -38,11 +35,10 @@ public partial class ScheduleWindow : System.Windows.Window
             worksheet.Cells[1, 4].Value = "Time start";
             worksheet.Cells[1, 5].Value = "Time end";
 
-
             for (int i = 0; i < allEmp.Count; i++)
             {
                 worksheet.Cells[i + rowOffset + counter, 1].Value = allEmp[i].Name;
-                worksheet.Cells[i + rowOffset + counter, 2].Value = (allEmp[i].workDuration / allEmp[i].workMaxTime) * 100;
+                worksheet.Cells[i + rowOffset + counter, 2].Value = ((allEmp[i].workDuration / allEmp[i].workMaxTime)).ToString("P1"); 
 
                 for (int j = 0; j < allEmp[i].WorkedTasks.Count; j++)
                 {
@@ -65,6 +61,8 @@ public partial class ScheduleWindow : System.Windows.Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
         string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";
         string fileName = $"ExportedData_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
         string filePath = Path.Combine(downloadsPath, fileName);

@@ -133,7 +133,7 @@ namespace TaskLibrary
                 }
             }
 
-            float endTasks = AllEmploy.MaxBy(x => x.EndLastTask).EndLastTask;
+            float endTasks = AllEmploy.MaxBy(x => x.EndLastTask)!.EndLastTask;
             foreach (var employ in AllEmploy)
             {
                 employ.workMaxTime = endTasks;

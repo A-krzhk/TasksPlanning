@@ -13,6 +13,8 @@ namespace TaskLibrary
         public IReadOnlyList<Task> WorkedTasks => _workedTasks;
         public void Clear()
         {
+            workDuration = 0;
+            workMaxTime = 0;
             EndLastTask = 0;
             _workedTasks.Clear();
         }
@@ -35,7 +37,7 @@ namespace TaskLibrary
 
         public string GetFullString()
         {
-            var res = $"Worked AllTime: {EndLastTask} | worked time: {(workDuration/workMaxTime)*100}%";
+            var res = $"Worked AllTime: {EndLastTask} | worked time: {((workDuration/workMaxTime)).ToString("P1")}";
             foreach (var task in _workedTasks)
             {
                 res += $"\n {task.Id} ({task.StartWork} | {task.EndWork})";
